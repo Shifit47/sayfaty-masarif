@@ -25,7 +25,7 @@ jobs:
           python -m pip install flet
 
       - name: Build APK
-        run: flet build apk
+        run: flet build apk --yes
 
       - name: Upload APK (arm64)
         uses: actions/upload-artifact@v4
