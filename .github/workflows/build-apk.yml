@@ -24,6 +24,9 @@ jobs:
         run: |
           python -m pip install flet
 
+      - name: Trust Flutter SDK directory
+        run: git config --global --add safe.directory '*'
+
       - name: Build APK
         run: flet build apk --yes
 
