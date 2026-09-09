@@ -1,0 +1,18 @@
+[project]
+name = "sayfaty"
+version = "1.0.0"
+description = "سيفتي — ميزانية الشباب المغتربين"
+requires-python = ">=3.9"
+
+[tool.flet]
+org = "com.sayfaty"
+project = "sayfaty"
+product = "سيفتي"
+company = "Sayfaty"
+description = "مصاريف وأرصدة ببساطة"
+bundle_id = "com.sayfaty.app"
+copyright = "Sayfaty"
+splash_color = "#00695C"
+splash_dark_color = "#004D40"
+android_adaptive_icon_background = "#00695C"
+module_name = "main"

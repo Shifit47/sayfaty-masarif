@@ -1,0 +1,38 @@
+name: Build APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    container:
+      image: ghcr.io/flet-dev/flet-build:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build APK
+        run: flet build apk
+
+      - name: Upload APK (arm64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sayfaty-arm64
+          path: build/apk/*arm64*.apk
+          if-no-files-found: error
+
+      - name: Upload APK (x86_64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sayfaty-x86_64
+          path: build/apk/*x86_64*.apk
+          if-no-files-found: error

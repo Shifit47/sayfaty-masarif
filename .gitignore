@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+build/
+dist/
+.sayfaty/
+*.db
+.DS_Store
