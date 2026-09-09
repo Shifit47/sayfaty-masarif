@@ -41,12 +41,11 @@ class ExpensesView:
         self.cat.options = [ft.dropdown.Option(c) for c in storage.list_categories()]
 
     def build(self):
-        acc = self.app.acc
         add_btn = ft.FilledButton(
             "أضف المصروف",
             icon=ft.Icons.ADD_CIRCLE_OUTLINE,
             on_click=self.on_add,
-            disabled=not acc.has_members(),
+            disabled=not self.app.has_members(),
         )
         form = ft.Container(
             content=ft.Column(
@@ -184,7 +183,6 @@ class MembersView:
 
     def reload_list(self):
         members = storage.list_members()
-        self.app.acc.has_members_ = bool(members)
         self.list.controls.clear()
         for m in members:
             self.list.controls.append(
@@ -558,7 +556,6 @@ class SummaryView:
 # =====================================================================
 class SayfatyApp:
     def __init__(self):
-        self.acc = ft.Column()
         self.exp = None
         self.mem = None
         self.stl = None
