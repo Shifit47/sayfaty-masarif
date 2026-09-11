@@ -63,7 +63,7 @@ class ExpensesView:
             bgcolor=ft.Colors.TEAL_50,
             border_radius=10,
         )
-        return ft.Column([form, ft.Text("آخر المصاريف", weight=ft.FontWeight.BOLD), self.list])
+        return ft.Column([form, ft.Text("آخر المصاريف", weight=ft.FontWeight.BOLD), self.list], expand=True)
 
     def refresh(self):
         self.reload_list()
@@ -171,7 +171,7 @@ class MembersView:
             on_blur=self.save_currency,
         )
         head = ft.Row([add_btn, cur], spacing=8, alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
-        return ft.Column([head, self.list])
+        return ft.Column([head, self.list], expand=True)
 
     def save_currency(self, e):
         storage.set_currency(e.control.value.strip())
@@ -328,7 +328,7 @@ class SettlementsView:
             bgcolor=ft.Colors.PURPLE_50,
             border_radius=10,
         )
-        return ft.Column([form, ft.Text("سجل التسويات", weight=ft.FontWeight.BOLD), self.list])
+        return ft.Column([form, ft.Text("سجل التسويات", weight=ft.FontWeight.BOLD), self.list], expand=True)
 
     def refresh(self):
         self.refill()
@@ -578,9 +578,8 @@ class SayfatyApp:
         self.show_view(idx)
 
     def show_view(self, idx):
-        for i, v in enumerate(self.pages):
-            if v is not None:
-                v.visible = i == idx
+        for i, col in enumerate(self.columns):
+            col.visible = i == idx
         self.page.update()
 
     def main(self, page: ft.Page):
@@ -601,9 +600,10 @@ class SayfatyApp:
         self.summary = SummaryView(page, self)
         self.pages = [self.exp, self.mem, self.stl, self.summary]
 
-        for v in self.pages:
-            v.visible = False
-            page.add(v.build())
+        self.columns = [v.build() for v in self.pages]
+        for c in self.columns:
+            c.visible = False
+        page.add(*self.columns)
 
         self.nav = ft.NavigationBar(
             selected_index=0,
@@ -626,7 +626,7 @@ class SayfatyApp:
             storage.set_setting("seeded", "1")
 
         page.show_view = self.show_view
-        page.find_view = lambda i: self.pages[i]
+        page.find_view = lambda i: self.columns[i]
         page.go = self.show_view
 
         self.exp.refresh()
@@ -637,7 +637,7 @@ class SayfatyApp:
 
 
 def main():
-    ft.app(target=SayfatyApp().main)
+    ft.run(target=SayfatyApp().main)
 
 
 if __name__ == "__main__":
