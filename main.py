@@ -26,7 +26,7 @@ class ExpensesView:
         self.paid_by = ft.Dropdown(width=170, dense=True)
         self.cat = ft.Dropdown(width=180, dense=True)
         self.kind = ft.SegmentedButton(
-            selected={"مشترك"},
+            selected=["مشترك"],
             segments=[
                 ft.Segment(value="مشترك", label=ft.Text("مشترك")),
                 ft.Segment(value="فردي", label=ft.Text("فردي")),
