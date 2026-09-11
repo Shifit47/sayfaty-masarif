@@ -63,7 +63,7 @@ class ExpensesView:
             bgcolor=ft.Colors.TEAL_50,
             border_radius=10,
         )
-        return ft.Column([form, ft.Text("آخر المصاريف", weight=ft.FontWeight.BOLD), ft.expand(self.list)])
+        return ft.Column([form, ft.Text("آخر المصاريف", weight=ft.FontWeight.BOLD), self.list])
 
     def refresh(self):
         self.reload_list()
@@ -78,25 +78,24 @@ class ExpensesView:
                     content=ft.Row(
                         [
                             ft.Icon(ft.Icons.RECEIPT_LONG, color=ft.Colors.TEAL_700),
-                            ft.expand(
-                                ft.Column(
-                                    [
-                                        ft.Row(
-                                            [
-                                                ft.Text(e["description"], weight=ft.FontWeight.BOLD, expand=True),
-                                                ft.Text(money_str(e["amount"]), weight=ft.FontWeight.BOLD, color=ft.Colors.TEAL_900),
-                                            ]
-                                        ),
-                                        ft.Row(
-                                            [
-                                                ft.Text(f'{e["day"].replace("-", "/")} • {e["paid_by"]} • {e["kind"]}'),
-                                                ft.Text(e["category"], size=11, color=ft.Colors.GREY_700),
-                                            ],
-                                            spacing=4,
-                                        ),
-                                    ],
-                                    spacing=2,
-                                ),
+                            ft.Column(
+                                [
+                                    ft.Row(
+                                        [
+                                            ft.Text(e["description"], weight=ft.FontWeight.BOLD, expand=True),
+                                            ft.Text(money_str(e["amount"]), weight=ft.FontWeight.BOLD, color=ft.Colors.TEAL_900),
+                                        ]
+                                    ),
+                                    ft.Row(
+                                        [
+                                            ft.Text(f'{e["day"].replace("-", "/")} • {e["paid_by"]} • {e["kind"]}'),
+                                            ft.Text(e["category"], size=11, color=ft.Colors.GREY_700),
+                                        ],
+                                        spacing=4,
+                                    ),
+                                ],
+                                spacing=2,
+                                expand=True,
                             ),
                             ft.IconButton(
                                 ft.Icons.DELETE_OUTLINE,
@@ -172,7 +171,7 @@ class MembersView:
             on_blur=self.save_currency,
         )
         head = ft.Row([add_btn, cur], spacing=8, alignment=ft.MainAxisAlignment.SPACE_BETWEEN)
-        return ft.Column([head, ft.expand(self.list)])
+        return ft.Column([head, self.list])
 
     def save_currency(self, e):
         storage.set_currency(e.control.value.strip())
@@ -193,14 +192,13 @@ class MembersView:
                                 content=ft.Text(m["name"][0] if m["name"] else "؟", color=ft.Colors.WHITE),
                                 bgcolor=ft.Colors.TEAL_700,
                             ),
-                            ft.expand(
-                                ft.Column(
-                                    [
-                                        ft.Text(m["name"], weight=ft.FontWeight.BOLD, size=16),
-                                        ft.Text(f'العهدة: {money_str(m["advance"])}', size=12, color=ft.Colors.GREY_700),
-                                    ],
-                                    spacing=2,
-                                )
+                            ft.Column(
+                                [
+                                    ft.Text(m["name"], weight=ft.FontWeight.BOLD, size=16),
+                                    ft.Text(f'العهدة: {money_str(m["advance"])}', size=12, color=ft.Colors.GREY_700),
+                                ],
+                                spacing=2,
+                                expand=True,
                             ),
                             ft.IconButton(ft.Icons.EDIT_OUTLINED, on_click=lambda ev, id=m["id"]: self.edit_dialog(id)),
                             ft.IconButton(
@@ -300,8 +298,8 @@ class SettlementsView:
         self.list = ft.ListView(expand=True, padding=6, spacing=6)
         self.day = ft.TextField(label="التاريخ", value=storage.today_str().replace("-", "/"), width=150, dense=True)
         self.amount = ft.TextField(label="المبلغ", keyboard_type=ft.KeyboardType.NUMBER, width=160, dense=True)
-        self.payer = ft.Dropdown(width=170, dense=True)
-        self.receiver = ft.Dropdown(width=170, dense=True)
+        self.payer = ft.Dropdown(expand=True, dense=True)
+        self.receiver = ft.Dropdown(expand=True, dense=True)
         self.note = ft.TextField(label="ملاحظة (اختياري)", dense=True, expand=True)
         self.refill()
 
@@ -317,7 +315,7 @@ class SettlementsView:
                 [
                     ft.Row([self.day, self.amount], spacing=8),
                     ft.Row(
-                        [ft.Text("من", width=40), ft.expand(self.payer), ft.Text("إلى", width=40), ft.expand(self.receiver)],
+                        [ft.Text("من", width=40), self.payer, ft.Text("إلى", width=40), self.receiver],
                         spacing=4,
                         vertical_alignment=ft.CrossAxisAlignment.CENTER,
                     ),
@@ -330,7 +328,7 @@ class SettlementsView:
             bgcolor=ft.Colors.PURPLE_50,
             border_radius=10,
         )
-        return ft.Column([form, ft.Text("سجل التسويات", weight=ft.FontWeight.BOLD), ft.expand(self.list)])
+        return ft.Column([form, ft.Text("سجل التسويات", weight=ft.FontWeight.BOLD), self.list])
 
     def refresh(self):
         self.refill()
@@ -344,22 +342,21 @@ class SettlementsView:
                     content=ft.Row(
                         [
                             ft.Icon(ft.Icons.SWAP_HORIZ, color=ft.Colors.PURPLE_700),
-                            ft.expand(
-                                ft.Column(
-                                    [
-                                        ft.Text(
-                                            f'{s["payer"]} ← {s["receiver"]}',
-                                            weight=ft.FontWeight.BOLD,
-                                        ),
-                                        ft.Text(
-                                            f'{s["day"].replace("-", "/")} • {money_str(s["amount"])}'
-                                            + (f' • {s["note"]}' if s["note"] else ""),
-                                            size=12,
-                                            color=ft.Colors.GREY_700,
-                                        ),
-                                    ],
-                                    spacing=2,
-                                )
+                            ft.Column(
+                                [
+                                    ft.Text(
+                                        f'{s["payer"]} ← {s["receiver"]}',
+                                        weight=ft.FontWeight.BOLD,
+                                    ),
+                                    ft.Text(
+                                        f'{s["day"].replace("-", "/")} • {money_str(s["amount"])}'
+                                        + (f' • {s["note"]}' if s["note"] else ""),
+                                        size=12,
+                                        color=ft.Colors.GREY_700,
+                                    ),
+                                ],
+                                spacing=2,
+                                expand=True,
                             ),
                             ft.IconButton(
                                 ft.Icons.DELETE_OUTLINE,
@@ -430,7 +427,7 @@ class SummaryView:
         def card(title, value, color=ft.Colors.TEAL_800):
             return ft.Container(
                 content=ft.Row(
-                    [ft.Text(title, color=ft.Colors.GREY_800), ft.expand(), ft.Text(value, weight=ft.FontWeight.BOLD, color=color, size=16)],
+                    [ft.Text(title, color=ft.Colors.GREY_800), ft.Container(expand=True), ft.Text(value, weight=ft.FontWeight.BOLD, color=color, size=16)],
                 ),
                 padding=10,
                 bgcolor=ft.Colors.WHITE,
