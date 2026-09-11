@@ -637,7 +637,7 @@ class SayfatyApp:
 
 
 def main():
-    ft.run(target=SayfatyApp().main)
+    ft.run(SayfatyApp().main)
 
 
 if __name__ == "__main__":
