@@ -237,14 +237,14 @@ class MembersView:
             content=ft.Text(f"هتتحدف {m['name']}.. القوائم هتتجدد. تمام؟"),
             modal=True,
             actions=[
-                ft.TextButton("إلغاء", on_click=lambda ev: self.page.close(dlg)),
+                ft.TextButton("إلغاء", on_click=lambda ev: self.page.pop_dialog()),
                 ft.FilledButton(
                     "احذف",
-                    on_click=lambda ev: (self.page.close(dlg), storage.delete_member(mid), self.app.refresh_all()),
+                    on_click=lambda ev: (self.page.pop_dialog(), storage.delete_member(mid), self.app.refresh_all()),
                 ),
             ],
         )
-        self.page.open(dlg)
+        self.page.show_dialog(dlg)
 
     def _dialog(self, member):
         name = ft.TextField(label="الاسم", value=member["name"] if member else "", autofocus=True)
@@ -259,14 +259,14 @@ class MembersView:
             title=ft.Text("تعديل العضو" if member else "عضو جديد"),
             content=ft.Column([name, adv, note], tight=True, width=260),
             actions=[
-                ft.TextButton("إلغاء", on_click=lambda ev: self.page.close(dlg)),
+                ft.TextButton("إلغاء", on_click=lambda ev: self.page.pop_dialog()),
                 ft.FilledButton(
                     "حفظ",
                     on_click=lambda ev: self._save(dlg, name.value, adv.value, note.value, member["id"] if member else None),
                 ),
             ],
         )
-        self.page.open(dlg)
+        self.page.show_dialog(dlg)
 
     def _save(self, dlg, name, adv, note, mid):
         name = name.strip()
@@ -285,7 +285,7 @@ class MembersView:
         except Exception:
             self.app.snack("الاسم دا موجود خلاص")
             return
-        self.page.close(dlg)
+        self.page.pop_dialog()
         self.app.refresh_all()
 
 
@@ -563,7 +563,7 @@ class SayfatyApp:
         self.pages = []
 
     def snack(self, msg):
-        self.page.show_snack_bar(ft.SnackBar(ft.Text(msg), bgcolor=ft.Colors.TEAL_900))
+        self.page.show_dialog(ft.SnackBar(ft.Text(msg), bgcolor=ft.Colors.TEAL_900))
 
     def has_members(self):
         return bool(storage.list_members())
