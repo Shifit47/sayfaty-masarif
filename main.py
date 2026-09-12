@@ -66,6 +66,7 @@ class ExpensesView:
         return ft.Column([form, ft.Text("آخر المصاريف", weight=ft.FontWeight.BOLD), self.list], expand=True)
 
     def refresh(self):
+        self.refill_lists()
         self.reload_list()
 
     def reload_list(self):
@@ -594,6 +595,13 @@ class SayfatyApp:
             center_title=True,
         )
 
+        # إعدادات أول تشغيل (لازم قبل بناء المشاهدات عشان القوائم تتنفع)
+        if not storage.get_setting("seeded"):
+            if not storage.list_members():
+                storage.add_member("أحمد", 0)
+                storage.add_member("محمد", 0)
+            storage.set_setting("seeded", "1")
+
         self.exp = ExpensesView(page, self)
         self.mem = MembersView(page, self)
         self.stl = SettlementsView(page, self)
@@ -617,13 +625,6 @@ class SayfatyApp:
             ],
         )
         page.navigation_bar = self.nav
-
-        # إعدادات أول تشغيل
-        if not storage.get_setting("seeded"):
-            if not storage.list_members():
-                storage.add_member("أحمد", 0)
-                storage.add_member("محمد", 0)
-            storage.set_setting("seeded", "1")
 
         page.show_view = self.show_view
         page.find_view = lambda i: self.columns[i]
